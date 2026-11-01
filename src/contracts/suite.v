@@ -3,9 +3,18 @@
    quickproof/tools/new_contract.py.
 
    Proving `suite` in one worktree makes all laws share one model and one
-   specification per function of the code under test.  It needs the proof of
-   every theorem in src/contracts/*.v: an Admitted law shows up in
-   Print Assumptions of `suite`.
+   specification per function of the code under test.  The statement of
+   `suite` below is the generated one: the 19 laws of the contract.
+   `suite_x` is the conjunction of the 3 x_ laws (the earlier suite),
+   proved in src/proof/harness/ (their assemblies A2uLaw, DecLaw and RtLaw
+   in a2ulabel/, decode/ and roundtrip/).  Each of the 16 short laws is a
+   lemma `short_<law>` below, proved in src/proof/laws/<law>/ from the
+   proofs of the helpers of harness/laws_common.h (src/proof/laws/common/);
+   `suite` is assembled from them and `suite_x`.  All laws share the
+   specification layer of src/proof/: one specification per function of
+   the code under test.  Each law is also a theorem of its own, with its
+   generated name and statement, in src/contracts/laws.v (the projections
+   of `suite_x` and of `suite`).
    ====================================================================== *)
 
 Require Import QuickProof.Contract.
@@ -29,6 +38,237 @@ Require OpensslPunycode.contracts.x_a2ulabel.
 Require OpensslPunycode.contracts.x_decode.
 Require OpensslPunycode.contracts.x_roundtrip.
 
+(* ---------------------------------------------------------------------- *)
+(* The laws, one lemma per law, each in its own region below with the      *)
+(* `Require`s of its proof right above it.                                 *)
+(* ---------------------------------------------------------------------- *)
+
+(* === x_: the three laws of the first proof === *)
+
+Require OpensslPunycode.proof.harness.a2ulabel.A2uLaw.
+Require OpensslPunycode.proof.harness.decode.DecLaw.
+Require OpensslPunycode.proof.harness.roundtrip.RtLaw.
+
+Lemma suite_x :
+  harness_safe OpensslPunycode.contracts.x_a2ulabel.whole_prog /\
+  harness_safe OpensslPunycode.contracts.x_decode.whole_prog /\
+  harness_safe OpensslPunycode.contracts.x_roundtrip.whole_prog.
+Proof.
+  split; [ exact OpensslPunycode.proof.harness.a2ulabel.A2uLaw.a2ulabel_proved
+         | split; [ exact OpensslPunycode.proof.harness.decode.DecLaw.decode_proved
+                  | exact OpensslPunycode.proof.harness.roundtrip.RtLaw.roundtrip_proved ] ].
+Qed.
+
+(* === end x_ === *)
+
+(* === api_a2ulabel_copy === *)
+
+(* The law of harness/api_a2ulabel_copy.c, proved in src/proof/laws/api_a2ulabel_copy/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.api_a2ulabel_copy.AcpLaw.
+Lemma short_api_a2ulabel_copy : harness_safe OpensslPunycode.contracts.api_a2ulabel_copy.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.api_a2ulabel_copy.AcpLaw.api_a2ulabel_copy_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end api_a2ulabel_copy === *)
+
+(* === api_a2ulabel_labels === *)
+
+(* The law of harness/api_a2ulabel_labels.c, proved in src/proof/laws/api_a2ulabel_labels/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.api_a2ulabel_labels.AlbLaw.
+Lemma short_api_a2ulabel_labels : harness_safe OpensslPunycode.contracts.api_a2ulabel_labels.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.api_a2ulabel_labels.AlbLaw.api_a2ulabel_labels_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end api_a2ulabel_labels === *)
+
+(* === api_a2ulabel_nul === *)
+
+(* The law of harness/api_a2ulabel_nul.c, proved in src/proof/laws/api_a2ulabel_nul/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.api_a2ulabel_nul.AnuLaw.
+Lemma short_api_a2ulabel_nul : harness_safe OpensslPunycode.contracts.api_a2ulabel_nul.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.api_a2ulabel_nul.AnuLaw.api_a2ulabel_nul_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end api_a2ulabel_nul === *)
+
+(* === api_a2ulabel_size === *)
+
+(* The law of harness/api_a2ulabel_size.c, proved in src/proof/laws/api_a2ulabel_size/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.api_a2ulabel_size.AszLaw.
+Lemma short_api_a2ulabel_size : harness_safe OpensslPunycode.contracts.api_a2ulabel_size.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.api_a2ulabel_size.AszLaw.api_a2ulabel_size_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end api_a2ulabel_size === *)
+
+(* === api_decode_capacity === *)
+
+(* The law of harness/api_decode_capacity.c, proved in src/proof/laws/api_decode_capacity/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.api_decode_capacity.DcapLaw.
+Lemma short_api_decode_capacity : harness_safe OpensslPunycode.contracts.api_decode_capacity.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.api_decode_capacity.DcapLaw.api_decode_capacity_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end api_decode_capacity === *)
+
+(* === api_decode_deterministic === *)
+
+(* The law of harness/api_decode_deterministic.c, proved in src/proof/laws/api_decode_deterministic/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.api_decode_deterministic.DdetLaw.
+Lemma short_api_decode_deterministic : harness_safe OpensslPunycode.contracts.api_decode_deterministic.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.api_decode_deterministic.DdetLaw.api_decode_deterministic_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end api_decode_deterministic === *)
+
+(* === rfc_a2ulabel_utf8 === *)
+
+(* The law of harness/rfc_a2ulabel_utf8.c, proved in src/proof/laws/rfc_a2ulabel_utf8/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rfc_a2ulabel_utf8.Ru8Law.
+Lemma short_rfc_a2ulabel_utf8 : harness_safe OpensslPunycode.contracts.rfc_a2ulabel_utf8.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rfc_a2ulabel_utf8.Ru8Law.rfc_a2ulabel_utf8_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rfc_a2ulabel_utf8 === *)
+
+(* === rfc_ace_any_case === *)
+
+(* The law of harness/rfc_ace_any_case.c, proved in src/proof/laws/rfc_ace_any_case/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rfc_ace_any_case.RacLaw.
+Lemma short_rfc_ace_any_case : harness_safe OpensslPunycode.contracts.rfc_ace_any_case.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rfc_ace_any_case.RacLaw.rfc_ace_any_case_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rfc_ace_any_case === *)
+
+(* === rfc_basic_first === *)
+
+(* The law of harness/rfc_basic_first.c, proved in src/proof/laws/rfc_basic_first/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rfc_basic_first.RbfLaw.
+Lemma short_rfc_basic_first : harness_safe OpensslPunycode.contracts.rfc_basic_first.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rfc_basic_first.RbfLaw.rfc_basic_first_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rfc_basic_first === *)
+
+(* === rfc_digit_case === *)
+
+(* The law of harness/rfc_digit_case.c, proved in src/proof/laws/rfc_digit_case/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rfc_digit_case.RdcLaw.
+Lemma short_rfc_digit_case : harness_safe OpensslPunycode.contracts.rfc_digit_case.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rfc_digit_case.RdcLaw.rfc_digit_case_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rfc_digit_case === *)
+
+(* === rfc_samples === *)
+
+(* The law of harness/rfc_samples.c, proved in src/proof/laws/rfc_samples/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rfc_samples.RsmLaw.
+Lemma short_rfc_samples : harness_safe OpensslPunycode.contracts.rfc_samples.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rfc_samples.RsmLaw.rfc_samples_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rfc_samples === *)
+
+(* === rfc_unique === *)
+
+(* The law of harness/rfc_unique.c, proved in src/proof/laws/rfc_unique/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rfc_unique.RunLaw.
+Lemma short_rfc_unique : harness_safe OpensslPunycode.contracts.rfc_unique.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rfc_unique.RunLaw.rfc_unique_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rfc_unique === *)
+
+(* === rj_a2ulabel_any === *)
+
+(* The law of harness/rj_a2ulabel_any.c, proved in src/proof/laws/rj_a2ulabel_any/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rj_a2ulabel_any.JaaLaw.
+Lemma short_rj_a2ulabel_any : harness_safe OpensslPunycode.contracts.rj_a2ulabel_any.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rj_a2ulabel_any.JaaLaw.rj_a2ulabel_any_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rj_a2ulabel_any === *)
+
+(* === rj_decode_any === *)
+
+(* The law of harness/rj_decode_any.c, proved in src/proof/laws/rj_decode_any/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rj_decode_any.JdaLaw.
+Lemma short_rj_decode_any : harness_safe OpensslPunycode.contracts.rj_decode_any.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rj_decode_any.JdaLaw.rj_decode_any_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rj_decode_any === *)
+
+(* === rj_decode_invalid === *)
+
+(* The law of harness/rj_decode_invalid.c, proved in src/proof/laws/rj_decode_invalid/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rj_decode_invalid.JdiLaw.
+Lemma short_rj_decode_invalid : harness_safe OpensslPunycode.contracts.rj_decode_invalid.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rj_decode_invalid.JdiLaw.rj_decode_invalid_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rj_decode_invalid === *)
+
+(* === rt_roundtrip === *)
+
+(* The law of harness/rt_roundtrip.c, proved in src/proof/laws/rt_roundtrip/ from the helpers' bodies. *)
+Require OpensslPunycode.proof.laws.common.CommonBodies.
+Require OpensslPunycode.proof.laws.rt_roundtrip.TrtLaw.
+Lemma short_rt_roundtrip : harness_safe OpensslPunycode.contracts.rt_roundtrip.whole_prog.
+Proof.
+  exact (OpensslPunycode.proof.laws.rt_roundtrip.TrtLaw.rt_roundtrip_proved
+           OpensslPunycode.proof.laws.common.CommonBodies.common_bodies).
+Qed.
+
+(* === end rt_roundtrip === *)
+
 Theorem suite :
   harness_safe OpensslPunycode.contracts.api_a2ulabel_copy.whole_prog /\
   harness_safe OpensslPunycode.contracts.api_a2ulabel_labels.whole_prog /\
@@ -50,4 +290,22 @@ Theorem suite :
   harness_safe OpensslPunycode.contracts.x_decode.whole_prog /\
   harness_safe OpensslPunycode.contracts.x_roundtrip.whole_prog.
 Proof.
-Admitted.
+  exact
+    (conj short_api_a2ulabel_copy
+    (conj short_api_a2ulabel_labels
+    (conj short_api_a2ulabel_nul
+    (conj short_api_a2ulabel_size
+    (conj short_api_decode_capacity
+    (conj short_api_decode_deterministic
+    (conj short_rfc_a2ulabel_utf8
+    (conj short_rfc_ace_any_case
+    (conj short_rfc_basic_first
+    (conj short_rfc_digit_case
+    (conj short_rfc_samples
+    (conj short_rfc_unique
+    (conj short_rj_a2ulabel_any
+    (conj short_rj_decode_any
+    (conj short_rj_decode_invalid
+    (conj short_rt_roundtrip
+     suite_x)))))))))))))))).
+Qed.
