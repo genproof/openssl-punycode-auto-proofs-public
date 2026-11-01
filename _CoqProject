@@ -1,0 +1,4 @@
+-Q quickproof/coq/QuickProof QuickProof
+-R src OpensslPunycode
+quickproof/coq/QuickProof
+src
