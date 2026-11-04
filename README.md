@@ -4,7 +4,7 @@ This repository proves 19 specs of `crypto/punycode.c` in OpenSSL 3.6.5: the fun
 and `ossl_a2ulabel`, the code of CVE-2022-3602 and CVE-2022-3786. Each spec is a small C program
 in `harness/` that states a property and that you can run, and each spec has a Coq theorem. AI agents wrote the proofs, about
 36,000 lines of Coq that use VST (a Coq library for proofs about C), with QuickProof v0.1.0. Coq checks them,
-so nothing in the proofs has to be trusted.
+so nothing in the proofs has to be trusted. AI agents drafted the specs too, and they have not had a human review yet.
 
 [SPECS.md](SPECS.md) explains Punycode, how to read a spec, and what each spec says.
 
